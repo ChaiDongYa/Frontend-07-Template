@@ -1,0 +1,179 @@
+<!--
+ * @Date: 2020-12-01 19:47:56
+ * @LastEditors: ChaiDong
+ * @LastEditTime: 2020-12-02 21:09:43
+ * @FilePath: /Week01/index.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TicTacToe</title>
+  <style>
+    .cell{
+      width: 100px;
+      height: 100px;
+      border: 1px solid #cccccc;
+      line-height: 100px;
+      text-align: center;
+      font-size: 50px;
+      display: inline-block;
+      background-color: orange;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div id='board'>
+
+  </div>
+  <script>
+    // 棋盘数组
+    let pattern = [
+      [0, 0, 2],
+      [0, 1, 0],
+      [0, 0, 0]
+    ]
+    let color = 1
+    let green = "✅"
+    let red = "❌"
+    // 显示棋盘函数
+    function show () {
+      let board = document.getElementById('board')
+      board.innerHTML = ''
+      // x 代表横向
+      // y 代表纵向
+      for(let i= 0; i < 3; i++) {
+        for(let j = 0; j < 3; j++) {
+          let cell = document.createElement('div')
+          cell.classList.add('cell')
+          cell.innerText = 
+            pattern[i][j] == 2 ? red : 
+            pattern[i][j] == 1 ? green : ''
+          cell.addEventListener('click', () => move(j, i))
+          board.appendChild(cell)
+        }
+        board.appendChild(document.createElement("br"))
+      }
+    }
+
+    function move (x, y) {
+      if (pattern[y][x]) 
+        return false
+      pattern[y][x] = color
+      if (check(pattern, color)) {
+        alert(color == 2 ? red + 'is winner' : green + 'is winner')
+      }
+      color = 3 - color
+      show()
+      if (willWin(pattern, color)) {
+        console.log(color == 2 ? red + 'will winner' : green + 'will winner')
+      }
+    }
+
+    function check (pattern, color) {
+      for(let i= 0; i < 3; i++) {
+        let win = true
+        for(let j = 0; j < 3; j++) {
+          if(pattern[i][j] !== color) {
+            win = false
+          }
+        }
+        if(win)
+            return true
+      }
+
+      for(let i= 0; i < 3; i++) {
+        let win = true
+        for(let j = 0; j < 3; j++) {
+          if(pattern[j][i] !== color) {
+            win = false
+          }
+        }
+        if(win)
+            return true
+      }
+
+      {
+        let win = true
+        for(let j = 0; j < 3; j++) {
+          if(pattern[j][2-j] !== color) {
+            win = false
+          }
+        }
+        if(win)
+            return true
+      }
+
+      {
+        let win = true
+        for(let j = 0; j < 3; j++) {
+          if(pattern[j][j] !== color) {
+            win = false
+          }
+        }
+        if(win)
+            return true
+      }
+      return false
+    }
+
+    function clone (pattern) {
+      return JSON.parse(JSON.stringify(pattern))
+    }
+
+    function willWin (pattern, color) {
+      for(let i= 0; i < 3; i++) {
+        for(let j = 0; j < 3; j++) {
+          if (pattern[i][j])
+            continue
+          let tmp = clone(pattern)
+          tmp[i][j] = color
+          if (check(tmp, color)) {
+            return [j,i]
+          }
+        }
+      }
+      return null
+    }
+    function bestChoice (pattern, color) {
+      let p
+      if(p = willWin(pattern, color)) {
+        return {
+          pointer: p,
+          result: 1
+        }
+      }
+      let result = -2
+      let point = null
+      for(let i= 0; i < 3; i++) {
+        for(let j = 0; j < 3; j++) {
+          if (pattern[i][j])
+            continue
+          let tmp = clone(pattern)
+          tmp[i][j] = color
+          let r = bestChoice(tmp, 3 - color).result
+
+          if( - r > result) {
+            result = -r
+            point = [j, i]
+          }
+        }
+      }
+      return {
+        point: point,
+        result: point ? result : 0
+      }
+    }
+
+    show(pattern)
+    console.log(bestChoice(pattern, color))
+    
+  </script>
+  
+</body>
+</html>
