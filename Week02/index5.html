@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-12-13 13:37:34
  * @LastEditors: ChaiDong
- * @LastEditTime: 2020-12-13 13:50:30
+ * @LastEditTime: 2020-12-13 14:04:59
  * @FilePath: /Week02/index5.html
  * @Description: 
 -->
@@ -44,7 +44,7 @@
     class Sorted {
       constructor(data, compare) {
         this.data = data.slice();
-        this.compare = compare || ((a, b) => a - b)
+        this.compare = compare || ((a, b) => a - b);
       }
 
       take () {
@@ -123,11 +123,12 @@
       let queue = new Sorted([start], (a, b) => distance(a) - distance(b) );
       async function insert(x, y, pre) {
         if (x < 0 || x >= 100 || y < 0 || y >= 100) {
-          return
+          return;
         }
         if (table[y*100 + x]) {
-          return
+          return;
         }
+        await sleep(5)
         container.children[y*100 + x].style.backgroundColor = 'lightgreen'
         // map[y*100 + x] = 2
         table[ y * 100 + x] = pre
