@@ -1,0 +1,45 @@
+<!--
+ * @Date: 2021-01-02 16:15:45
+ * @LastEditors: ChaiDong
+ * @LastEditTime: 2021-01-02 16:37:03
+ * @FilePath: /Week05/drag.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #dragable{
+      width: 100px;
+      height: 100px;
+      background-color: antiquewhite;
+    }
+  </style>
+</head>
+<body>
+  <div id="dragable"></div>
+  
+  <script>
+    let dragable = document.getElementById('dragable');
+    let baseX = 0, baseY = 0;
+    dragable.addEventListener('mousedown', function (event) {
+      let startX = event.clientX, startY = event.clientY
+      let up = event => {
+        baseX = baseX + event.clientX - startX;
+        baseY = baseY + event.clientY - startY;
+        document.removeEventListener('mousemove', move)
+        document.removeEventListener('mouseup', up)
+      }
+
+      let move = event => {
+        dragable.style.transform = `translate(${baseX + event.clientX - startX}px, ${baseY + event.clientY - startY}px)`
+      }
+      document.addEventListener('mousemove', move)
+      document.addEventListener('mouseup', up)
+    })
+  </script>
+</body>
+</html>
